@@ -13,29 +13,29 @@ struct Anime: Identifiable {
 class AnimeScraper: ObservableObject {
     @Published var animes: [Anime] = []
     @Published var currentPage = 1
-    @Published var totalPages = 10
+    @Published var totalPages = 1
     @Published var searchQuery: String = ""
     @Published var noResults = false
-
+    
     func fetchAnimeData(query: String = "", page: Int = 1) {
         var urlString: String
-
+        
         if query.isEmpty {
             urlString = "https://aniwave.se/trending-anime/?page=\(page)"
         } else {
             let formattedQuery = query.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? query
             urlString = "https://aniwave.se/filter?keyword=\(formattedQuery)&page=\(page)"
         }
-
+        
         guard let url = URL(string: urlString) else { return }
-
+        
         URLSession.shared.dataTask(with: url) { data, response, error in
             guard let data = data, error == nil else { return }
-
+            
             do {
                 let html = String(data: data, encoding: .utf8) ?? ""
                 let document = try SwiftSoup.parse(html)
-
+                
                 if try document.text().contains("No matching records found") {
                     DispatchQueue.main.async {
                         self.animes = []
@@ -43,9 +43,9 @@ class AnimeScraper: ObservableObject {
                     }
                     return
                 }
-
+                
                 let animeElements = try document.select("div.item")
-
+                
                 var fetchedAnimes = [Anime]()
                 for element in animeElements {
                     let title = try element.select("a.name").text()
@@ -55,10 +55,20 @@ class AnimeScraper: ObservableObject {
                     let anime = Anime(title: title, posterURL: posterURL, seriesURL: seriesURL)
                     fetchedAnimes.append(anime)
                 }
-
+                
+                var extractedTotalPages = 1
+                
+                if let lastPageElement = try document.select("ul.pagination li a[rel=last]").first() {
+                    let lastPageURL = try lastPageElement.attr("href")
+                    if let lastPageNumber = lastPageURL.components(separatedBy: "page=").last {
+                        extractedTotalPages = Int(lastPageNumber) ?? 1
+                    }
+                }
+                
                 DispatchQueue.main.async {
                     self.animes = fetchedAnimes
                     self.noResults = fetchedAnimes.isEmpty
+                    self.totalPages = extractedTotalPages
                 }
             } catch {
                 print("Error parsing HTML: \(error)")
@@ -76,17 +86,17 @@ class ImageLoader: ObservableObject {
     private var urlString: String?
     private var retries = 0
     private var cancellable: AnyCancellable?
-
+    
     func loadImage(from urlString: String) {
         self.urlString = urlString
-
+        
         if let cachedImage = ImageCache.shared.object(forKey: urlString as NSString) {
             self.image = cachedImage
             return
         }
-
+        
         guard let url = URL(string: urlString) else { return }
-
+        
         cancellable = URLSession.shared.dataTaskPublisher(for: url)
             .map { UIImage(data: $0.data) }
             .replaceError(with: nil)
@@ -106,7 +116,7 @@ class ImageLoader: ObservableObject {
                 }
             }
     }
-
+    
     func cancel() {
         cancellable?.cancel()
     }
@@ -115,7 +125,7 @@ class ImageLoader: ObservableObject {
 struct CachedImageView: View {
     @StateObject private var imageLoader = ImageLoader()
     let urlString: String
-
+    
     var body: some View {
         Group {
             if let image = imageLoader.image {
@@ -144,7 +154,7 @@ struct ContentView: View {
     @State private var isSearching = false
     @State private var searchText = ""
     @Environment(\.colorScheme) var colorScheme
-
+    
     var body: some View {
         NavigationView {
             VStack {
@@ -163,7 +173,7 @@ struct ContentView: View {
                                         VStack {
                                             CachedImageView(urlString: anime.posterURL)
                                                 .frame(height: 200)
-
+                                            
                                             Text(anime.title)
                                                 .font(.headline)
                                                 .multilineTextAlignment(.center)
@@ -179,7 +189,7 @@ struct ContentView: View {
                         .onChange(of: scraper.animes.count) { _ in
                             scrollProxy.scrollTo(scraper.animes.last?.id, anchor: .bottom)
                         }
-
+                        
                         HStack {
                             Button(action: {
                                 if scraper.currentPage > 1 {
@@ -191,14 +201,14 @@ struct ContentView: View {
                                     .font(.title)
                             }
                             .disabled(scraper.currentPage == 1)
-
+                            
                             Spacer()
-
+                            
                             Text("Page \(scraper.currentPage) of \(scraper.totalPages)")
                                 .font(.subheadline)
-
+                            
                             Spacer()
-
+                            
                             Button(action: {
                                 scraper.currentPage += 1
                                 scraper.fetchAnimeData(query: isSearching ? searchText : "", page: scraper.currentPage)
@@ -218,15 +228,14 @@ struct ContentView: View {
                     Button(action: {
                         scraper.searchQuery = ""
                         scraper.currentPage = 1
-                        scraper.totalPages = 10
+                        scraper.totalPages = 1
                         scraper.fetchAnimeData()
                         isSearching = false
                     }) {
                         Image(systemName: "house")
                     }
                 }
-
-                // Search Button
+                
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button(action: {
                         isShowingSearchSheet.toggle()
@@ -240,12 +249,13 @@ struct ContentView: View {
                     TextField("Search anime...", text: $searchText)
                         .textFieldStyle(RoundedBorderTextFieldStyle())
                         .padding()
-
+                    
                     Button("Search") {
                         UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
-
+                        
                         scraper.currentPage = 1
                         scraper.fetchAnimeData(query: searchText, page: 1)
+                        //                        searchText = ""
                         isSearching = true
                         isShowingSearchSheet = false
                     }
