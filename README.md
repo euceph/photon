@@ -1,2 +1,3 @@
 # photon
-an iOS frontend application for anime
+
+a lightweight iOS frontend application to browse and watch anime
