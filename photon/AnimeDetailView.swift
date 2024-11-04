@@ -11,6 +11,7 @@ struct AnimeDetailView: View {
     @State private var type: String = ""
     @State private var isExpanded: Bool = false
     @State private var selectedEpisode: String? = nil
+    @State private var premiereYear: String? = nil
     private let descriptionThreshold = 150
     
     var body: some View {
@@ -65,11 +66,9 @@ struct AnimeDetailView: View {
                     let columns = Array(repeating: GridItem(.flexible(), spacing: 16), count: 7)
                     LazyVGrid(columns: columns, spacing: 16) {
                         ForEach(1...numberOfEpisodes, id: \.self) { episodeNumber in
-                            Button(action: {
-                                selectedEpisode = "\(episodeNumber)"
-                                let episodeURL = "https://aniwave.se/anime-watch/\(storedTitle.lowercased().replacingOccurrences(of: " ", with: "-"))/ep-\(episodeNumber)"
-                                print("Navigate to: \(episodeURL)")
-                            }) {
+                            NavigationLink(
+                                destination: EpisodeView(episodeURL: "https://aniwave.se/anime-watch/\(storedTitle.lowercased().replacingOccurrences(of: " ", with: "-"))/ep-\(episodeNumber)")
+                            ) {
                                 Text("\(episodeNumber)")
                                     .font(.headline)
                                     .bold()

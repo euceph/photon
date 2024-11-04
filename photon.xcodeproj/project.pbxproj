@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		25228BF42CBF0B840021B84D /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 25228BF32CBF0B840021B84D /* WebKit.framework */; };
 		2532089A2CB3CD8400B84F2A /* SwiftSoup in Frameworks */ = {isa = PBXBuildFile; productRef = 253208992CB3CD8400B84F2A /* SwiftSoup */; };
 		2532089E2CB3CEB800B84F2A /* AVKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2532089C2CB3CEB400B84F2A /* AVKit.framework */; };
 		253208A32CB3CEF500B84F2A /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 253208A12CB3CEF300B84F2A /* SwiftUI.framework */; };
@@ -31,6 +32,7 @@
 
 /* Begin PBXFileReference section */
 		2520ABB82CB3D02200194D49 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS18.0.sdk/System/Library/Frameworks/UIKit.framework; sourceTree = DEVELOPER_DIR; };
+		25228BF32CBF0B840021B84D /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS18.0.sdk/System/Library/Frameworks/WebKit.framework; sourceTree = DEVELOPER_DIR; };
 		2532089C2CB3CEB400B84F2A /* AVKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVKit.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS18.0.sdk/System/Library/Frameworks/AVKit.framework; sourceTree = DEVELOPER_DIR; };
 		253208A12CB3CEF300B84F2A /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS18.0.sdk/System/Library/Frameworks/SwiftUI.framework; sourceTree = DEVELOPER_DIR; };
 		253E7B1D2CB3C8C7002AC4C0 /* photon.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = photon.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -63,6 +65,7 @@
 			files = (
 				2532089E2CB3CEB800B84F2A /* AVKit.framework in Frameworks */,
 				253208A32CB3CEF500B84F2A /* SwiftUI.framework in Frameworks */,
+				25228BF42CBF0B840021B84D /* WebKit.framework in Frameworks */,
 				2532089A2CB3CD8400B84F2A /* SwiftSoup in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -87,6 +90,7 @@
 		2532089B2CB3CEB400B84F2A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				25228BF32CBF0B840021B84D /* WebKit.framework */,
 				2520ABB82CB3D02200194D49 /* UIKit.framework */,
 				253208A12CB3CEF300B84F2A /* SwiftUI.framework */,
 				2532089C2CB3CEB400B84F2A /* AVKit.framework */,
