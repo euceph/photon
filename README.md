@@ -9,8 +9,8 @@
 
 ## Installation
 
-photon will be available on the Apple App Store, with a companion app for watchOS
+photon will be available on the Apple App Store
 
 ## Usage
 
-Usage steps coming soon.
+Usage steps coming soon!
