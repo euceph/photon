@@ -9,8 +9,8 @@
 
 ## Installation
 
-photon will only be provided as source code or as a built .ipa file, so installation will be possible through AltStore
+photon will only be provided as source code or as a built .ipa file, installation will be possible through external signing methods
 
 ## Usage
 
-Usage steps coming soon!
+usage steps coming soon!
