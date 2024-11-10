@@ -9,7 +9,7 @@
 
 ## Installation
 
-photon will be available on the Apple App Store
+photon will only be provided as source code or as a built .ipa file, so installation will be possible through AltStore
 
 ## Usage
 
